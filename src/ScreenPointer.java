@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.CharBuffer;
+import java.util.Random;
 import java.util.StringTokenizer;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -43,7 +44,7 @@ class jfr extends JFrame implements KeyListener,Runnable
     {
         super("ScreenPointer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300,300);
+        setSize(200,100);
         
         
         passKey=new JTextField();
@@ -157,7 +158,7 @@ requestedFile = new DataInputStream(new BufferedInputStream
         }
         else
         {
-            fileName="smth.png";
+            fileName=new Random().nextInt()+".png";
             try{
                 if(rob==null)   rob=new Robot();
                 screenShot = rob.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
@@ -219,12 +220,10 @@ requestedFile = new DataInputStream(new BufferedInputStream
                                     // PassKey?mm=X,Y
                                     // PassKey?sz=W,H
                                     send=false;
-                                    
                                     try{
                                         if(rob==null)   rob=new Robot();
                                         if(fileName.indexOf("mm=")!=-1)
                                         {
-                                            System.out.println(cp.winW+","+cp.scrW+"\t\t"+cp.winH+","+cp.scrH);
                                             rob.mouseMove( (Integer.parseInt(fileName.substring(fileName.indexOf('=')+1,fileName.indexOf(',')) )*cp.scrW)/cp.winW
                                                 ,(Integer.parseInt(fileName.substring(fileName.lastIndexOf(',')+1,fileName.length()) )*cp.scrH)/cp.winH );
                                             
@@ -241,7 +240,7 @@ requestedFile = new DataInputStream(new BufferedInputStream
                                         else
                                             { rob.mousePress(InputEvent.BUTTON3_MASK);rob.mouseRelease(InputEvent.BUTTON3_MASK);}
                                         
-                                    }catch(Exception e){System.err.println(e);}
+                                    }catch(Exception e){System.err.println(e+"\t while sending "+fileName);}
                                   //  fileName=fileName.substring(0,fileName.indexOf('?'));
                                 }
                             }

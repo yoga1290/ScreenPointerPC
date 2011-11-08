@@ -1,7 +1,9 @@
 <html>
 <head>
 <title></title>
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.js"></script>-->
+<!--
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.js"></script>
+-->
 
 <script src="jquery.js"></script>
 </head>
@@ -17,22 +19,23 @@ var k=prompt("PassKey:");
 
 $(document).ready(function(){
         $(document).mousemove(function(e){
+            //Random Numbers to prevent caching :)
 //                        $("#fr").html("<img src='http://"+ip+":1290/"+k+"?mm="+e.pageX+","+e.pageY+"' >");
-                $.get("http://"+ip+":1290/"+k+"?mm="+(e.pageX-$("#fr").offsetLeft)+","+(e.pageY-$("#fr").offsetTop));
-            }); // */
+                $.get("http://"+ip+":1290/"+k+"?"+Math.floor ( Math.random ( ) * (1<<30) )+"mm="+(e.pageX)+","+(e.pageY));
+            });
 
-        $(document).resize(function(){
-                $("#fr").html("<img src='http://"+ip+":1290/"+k+"?sz="+$(window).width()+","+$(window).height()+"' >");
+        $(window).resize(function(){
+                $("#fr").html("<img src='http://"+ip+":1290/"+k+"?"+Math.floor ( Math.random ( ) * (1<<30) )+"sz="+$(window).width()+","+$(window).height()+"' >");
         });
 
 
         $(document).mousedown(function(event) {
             switch (event.which) {
                 case 1:
-                    $("#fr").html("<img src='http://"+ip+":1290/"+k+"?lc' >");
+                    $("#fr").html("<img src='http://"+ip+":1290/"+k+"?"+Math.floor ( Math.random ( ) * (1<<30) )+"lc' >");
                     break;
                 case 3:
-                    $("#fr").html("<img src='http://"+ip+":1290/"+k+"?rc' >");
+                    $("#fr").html("<img src='http://"+ip+":1290/"+k+"?"+Math.floor ( Math.random ( ) * (1<<30) )+"rc' >");
                     break;
             }
         });

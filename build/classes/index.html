@@ -1,0 +1,42 @@
+<html>
+<head>
+<title></title>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.js"></script>-->
+
+<script src="jquery.js"></script>
+</head>
+<body>
+<div id="fr">Set display size by resizing this window!</div>
+<script>
+var ip=window.location.href.substring(
+    Math.max(window.location.href.indexOf("http://"),0) , window.location.href.lastIndexOf(":"));
+
+if(ip.indexOf("http://", 0)!=-1)
+    ip=ip.substring(7, ip.length);
+var k=prompt("PassKey:");
+
+$(document).ready(function(){
+        $(document).mousemove(function(e){
+//                        $("#fr").html("<img src='http://"+ip+":1290/"+k+"?mm="+e.pageX+","+e.pageY+"' >");
+                $.get("http://"+ip+":1290/"+k+"?mm="+(e.pageX-$("#fr").offsetLeft)+","+(e.pageY-$("#fr").offsetTop));
+            }); // */
+
+        $(document).resize(function(){
+                $("#fr").html("<img src='http://"+ip+":1290/"+k+"?sz="+$(window).width()+","+$(window).height()+"' >");
+        });
+
+
+        $(document).mousedown(function(event) {
+            switch (event.which) {
+                case 1:
+                    $("#fr").html("<img src='http://"+ip+":1290/"+k+"?lc' >");
+                    break;
+                case 3:
+                    $("#fr").html("<img src='http://"+ip+":1290/"+k+"?rc' >");
+                    break;
+            }
+        });
+});
+</script>
+</body>
+</html>

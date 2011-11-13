@@ -227,18 +227,48 @@ requestedFile = new DataInputStream(new BufferedInputStream
                                             rob.mouseMove( (Integer.parseInt(fileName.substring(fileName.indexOf('=')+1,fileName.indexOf(',')) )*cp.scrW)/cp.winW
                                                 ,(Integer.parseInt(fileName.substring(fileName.lastIndexOf(',')+1,fileName.length()) )*cp.scrH)/cp.winH );
                                             
-                                            return false;
+                                            return false;//comment this line & the server'll generate new screenshot!
                                             //this actually,stops this process :P
+                                            
                                         }
                                         else if(fileName.indexOf("sz=")!=-1)
                                         {
                                             cp.winW=Integer.parseInt(fileName.substring(fileName.indexOf('=')+1,fileName.indexOf(',')) );
                                             cp.winH=Integer.parseInt(fileName.substring(fileName.indexOf(',')+1,fileName.length()) );
                                         }
+                                        else if(fileName.indexOf("kp=")!=-1)
+                                        {
+                                            rob.keyPress( Integer.parseInt(fileName.substring(fileName.indexOf('=')+1,fileName.length()) ) );
+                                            
+                                            return false;//comment this line & the server'll generate new screenshot!
+                                        }
+                                        else if(fileName.indexOf("kr=")!=-1)
+                                        {
+                                            rob.keyRelease( Integer.parseInt(fileName.substring(fileName.indexOf('=')+1,fileName.length()) ) );
+                                        }
+                                        else if(fileName.indexOf("mp=")!=-1)
+                                        {
+                                            /*
+                                             * InputEvent.BUTTON1_MASK => 16 => 1<<4 => 1<<(2+2)
+                                             * InputEvent.BUTTON2_MASK => 8 => 1<<3 => 1<<(2+1)
+                                             * InputEvent.BUTTON3_MASK => 4 => 1<<3 => 1<<(2+0)
+                                             */
+                                            rob.mousePress( 1<<(2+ Integer.parseInt(fileName.substring(fileName.indexOf('=')+1,fileName.length())) ) );
+                                            return false;//comment this line & the server'll generate new screenshot!
+                                        }
+                                        else if(fileName.indexOf("mr=")!=-1)
+                                        {
+                                            /*
+                                             * InputEvent.BUTTON1_MASK => 16 => 1<<4 => 1<<(2+2)
+                                             * InputEvent.BUTTON2_MASK => 8 => 1<<3 => 1<<(2+1)
+                                             * InputEvent.BUTTON3_MASK => 4 => 1<<3 => 1<<(2+0)
+                                             */
+                                            rob.mouseRelease( 1<<(2+ Integer.parseInt(fileName.substring(fileName.indexOf('=')+1,fileName.length()) )) );
+                                        }
                                         
-                                        else if(fileName.indexOf("lc")!=-1){ rob.mousePress(InputEvent.BUTTON1_MASK);rob.mouseRelease(InputEvent.BUTTON1_MASK);}
-                                        else
-                                            { rob.mousePress(InputEvent.BUTTON3_MASK);rob.mouseRelease(InputEvent.BUTTON3_MASK);}
+//                                        else if(fileName.indexOf("lc")!=-1){ rob.mousePress(InputEvent.BUTTON1_MASK);rob.mouseRelease(InputEvent.BUTTON1_MASK);}
+//                                        else
+//                                            { rob.mousePress(InputEvent.BUTTON3_MASK);rob.mouseRelease(InputEvent.BUTTON3_MASK);}
                                         
                                     }catch(Exception e){System.err.println(e+"\t while sending "+fileName);}
                                   //  fileName=fileName.substring(0,fileName.indexOf('?'));

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>Screen Pointer</title>
+</head>
+	<body>
+		<div id="fixed" style="position:fixed; top:0px; left:0px; width:100%; height:100%;">
+			<input type="text" style="width: 70%; broder: 0px;">
+			<div id="logger">LOG</div>
+		</div>
+	</body>
+<script>
+
+var x=-1;
+var y=-1;
+var queue = [];
+
+function logger(txt) {
+	vat log = document.getElementById('logger').innerHTML;
+	document.getElementById('logger').innerHTML = log + "<br>" + txt;
+}
+
+function mousemove(e) {
+
+	logger('mousemove PUSHED');
+	return function(callback) {
+
+		logger('mousemove');
+		if (x < 0) x = e.pageX;
+		if (y < 0) y = e.pageY;
+
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', '/mm?dx=' + (e.pageX - x) + '&dy=' + (e.pageY - y));
+		xhr.onload = callback;
+		xhr.send();
+
+		x = e.pageX;
+		y = e.pageY;
+	};
+}
+
+function mouseup(e) {
+	return function(callback) {
+
+		logger('mouseup');
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', '/mr');
+		xhr.onload = callback;
+		xhr.send();
+	};
+}
+
+function keyup(e) {
+
+	logger('keyup PUSHED');
+	return function(callback) {
+
+		logger('keyup');
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', '/kr?keyCode=' + e.keyCode);
+		xhr.onload = callback;
+		xhr.send();
+	};
+}
+
+function keydown(e) {
+
+	logger('keydown PUSHED');
+	return function(callback) {
+
+		logger('keydown');
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', '/kp?keyCode=' + e.keyCode);
+		xhr.onload = callback;
+		xhr.send();
+	};
+}
+
+window.document.addEventListener('mousemove', function(e) {
+	queue.push(mousemove(e));
+});
+
+window.document.addEventListener('mouseup', function(e) {
+	queue.push(mouseup(e));
+});
+
+window.document.addEventListener('keyup', function(e) {
+	queue.push(keyup(e));
+});
+
+window.document.addEventListener('keydown', function(e) {
+	queue.push(keydown(e));
+});
+
+function runner() {
+	if(queue.length > 0)
+		queue.pop()(runner);
+	else setTimeout(runner, 1000);
+}
+//runner();
+
+</script>
+</html>

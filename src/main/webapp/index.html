@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+	<title>Screen Pointer</title>
+</head>
+	<body>
+		<div style="position:fixed; bottom:0px;width:100%;">
+			<button style="width:30%;">L</button>
+			<input type="text" style="width: 30%;">
+			<button style="width:30%;">R</button>
+		</div>
+	</body>
+<script>
+var queue = [];
+function callback() {
+	if(queue.length > 0) {
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', queue.splice(0,1) );
+		xhr.onload = callback;
+		xhr.send();
+	}
+	else setTimeout(callback, 1000);
+}
+callback();
+
+
+var x = 0;
+var y = 0;
+function mousemove(e) {
+	var nx = e.pageX || e.offsetX;
+	var ny = e.pageY || e.offsetY;
+
+	queue.push('/mm?dx=' + (nx - x) + '&dy=' + (ny - y));
+
+	x = nx;
+	y = ny;
+	e.preventDefault();
+}
+
+window.document.addEventListener('mousemove', mousemove);
+window.document.addEventListener('touchmove', mousemove);
+
+window.document.addEventListener('mousedown', function(e) {
+	queue.push('/mp');
+	x = e.pageX || e.offsetX;
+	y = e.pageY || e.offsetY;
+	e.preventDefault();
+});
+
+
+window.document.addEventListener('mouseup', function(e) {
+	queue.push('/mr');
+	e.preventDefault();
+});
+window.document.addEventListener('touchstart', function(e) {
+//	queue.push('/mp');
+	x = e.pageX || e.offsetX;
+	y = e.pageY || e.offsetY;
+	e.preventDefault();
+});
+
+window.document.addEventListener('touchend', function(e) {
+//	queue.push('/mr');
+	e.preventDefault();
+});
+
+
+window.document.addEventListener('keyup', function(e) {
+	queue.push('/kr?keyCode=' + e.keyCode);
+});
+
+window.document.addEventListener('keydown', function(e) {
+	queue.push('/kp?keyCode=' + e.keyCode);
+});
+</script>
+</html>

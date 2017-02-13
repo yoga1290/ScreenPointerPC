@@ -1,4 +1,0 @@
-jfr
-FileRequest
-ScreenPointer
-commonProperties

@@ -3,104 +3,77 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 	<title>Screen Pointer</title>
 </head>
 	<body>
-		<div id="fixed" style="position:fixed; top:0px; left:0px; width:100%; height:100%;">
-			<input type="text" style="width: 70%; broder: 0px;">
-			<div id="logger">LOG</div>
+		<div style="position:fixed; bottom:0px;width:100%;">
+			<button style="width:30%;">L</button>
+			<input type="text" style="width: 30%;">
+			<button style="width:30%;">R</button>
 		</div>
 	</body>
 <script>
-
-var x=-1;
-var y=-1;
 var queue = [];
-
-function logger(txt) {
-	vat log = document.getElementById('logger').innerHTML;
-	document.getElementById('logger').innerHTML = log + "<br>" + txt;
+function callback() {
+	if(queue.length > 0) {
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', queue.splice(0,1) );
+		xhr.onload = callback;
+		xhr.send();
+	}
+	else setTimeout(callback, 1000);
 }
+callback();
 
+
+var x = 0;
+var y = 0;
 function mousemove(e) {
+	var nx = e.pageX || e.offsetX;
+	var ny = e.pageY || e.offsetY;
 
-	logger('mousemove PUSHED');
-	return function(callback) {
+	queue.push('/mm?dx=' + (nx - x) + '&dy=' + (ny - y));
 
-		logger('mousemove');
-		if (x < 0) x = e.pageX;
-		if (y < 0) y = e.pageY;
-
-		var xhr = new XMLHttpRequest();
-		xhr.open('GET', '/mm?dx=' + (e.pageX - x) + '&dy=' + (e.pageY - y));
-		xhr.onload = callback;
-		xhr.send();
-
-		x = e.pageX;
-		y = e.pageY;
-	};
+	x = nx;
+	y = ny;
+	e.preventDefault();
 }
 
-function mouseup(e) {
-	return function(callback) {
+window.document.addEventListener('mousemove', mousemove);
+window.document.addEventListener('touchmove', mousemove);
 
-		logger('mouseup');
-		var xhr = new XMLHttpRequest();
-		xhr.open('GET', '/mr');
-		xhr.onload = callback;
-		xhr.send();
-	};
-}
-
-function keyup(e) {
-
-	logger('keyup PUSHED');
-	return function(callback) {
-
-		logger('keyup');
-		var xhr = new XMLHttpRequest();
-		xhr.open('GET', '/kr?keyCode=' + e.keyCode);
-		xhr.onload = callback;
-		xhr.send();
-	};
-}
-
-function keydown(e) {
-
-	logger('keydown PUSHED');
-	return function(callback) {
-
-		logger('keydown');
-		var xhr = new XMLHttpRequest();
-		xhr.open('GET', '/kp?keyCode=' + e.keyCode);
-		xhr.onload = callback;
-		xhr.send();
-	};
-}
-
-window.document.addEventListener('mousemove', function(e) {
-	queue.push(mousemove(e));
+window.document.addEventListener('mousedown', function(e) {
+	queue.push('/mp');
+	x = e.pageX || e.offsetX;
+	y = e.pageY || e.offsetY;
+	e.preventDefault();
 });
+
 
 window.document.addEventListener('mouseup', function(e) {
-	queue.push(mouseup(e));
+	queue.push('/mr');
+	e.preventDefault();
+});
+window.document.addEventListener('touchstart', function(e) {
+//	queue.push('/mp');
+	x = e.pageX || e.offsetX;
+	y = e.pageY || e.offsetY;
+	e.preventDefault();
 });
 
+window.document.addEventListener('touchend', function(e) {
+//	queue.push('/mr');
+	e.preventDefault();
+});
+
+
 window.document.addEventListener('keyup', function(e) {
-	queue.push(keyup(e));
+	queue.push('/kr?keyCode=' + e.keyCode);
 });
 
 window.document.addEventListener('keydown', function(e) {
-	queue.push(keydown(e));
+	queue.push('/kp?keyCode=' + e.keyCode);
 });
-
-function runner() {
-	if(queue.length > 0)
-		queue.pop()(runner);
-	else setTimeout(runner, 1000);
-}
-//runner();
-
 </script>
 </html>

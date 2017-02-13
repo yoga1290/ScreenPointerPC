@@ -1,6 +1,8 @@
 package yoga1290;
 
 import java.awt.Robot;
+import java.awt.Point;
+import java.awt.MouseInfo;
 import java.awt.event.InputEvent;
 
 import org.springframework.boot.CommandLineRunner;
@@ -10,17 +12,14 @@ import org.springframework.stereotype.Service;
 public class RobotSvc {
 
     private Robot robot;
-    private int x;
-    private int y;
 
     public RobotSvc() throws Exception {
         robot = new Robot();
     }
 
     public void mouseMove(int dx, int dy) {
-        x += dx;
-        y += dy;
-        robot.mouseMove(x, y);
+        Point p = MouseInfo.getPointerInfo().getLocation();
+        robot.mouseMove(p.x + dx, p.y + dy);
     }
 
     public void mousePress() {

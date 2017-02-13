@@ -25,28 +25,24 @@ public class HomeController {
 
     @RequestMapping("/mp")
     private @ResponseBody String mp() throws Exception {
-        System.out.println("\n/mouse press\n");
         robotSvc.mousePress();
         return "";
     }
 
     @RequestMapping("/mr")
     private @ResponseBody String mr() throws Exception {
-        System.out.println("\n/mouse release\n");
         robotSvc.mouseRelease();
         return "";
     }
 
     @RequestMapping("/kp")
     private @ResponseBody String kp(@RequestParam int keyCode) throws Exception {
-        System.out.println("\n/key press\n");
         robotSvc.keyPress(keyCode);
         return "";
     }
 
     @RequestMapping("/kr")
     private @ResponseBody String kr(@RequestParam int keyCode) throws Exception {
-        System.out.println("\n/key release\n");
         robotSvc.keyRelease(keyCode);
         return "";
     }

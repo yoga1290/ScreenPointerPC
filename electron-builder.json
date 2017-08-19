@@ -1,0 +1,23 @@
+{
+  "appId": "yoga1290.screenpointer",
+  "files": ["./node_modules/**", "./electron/**"],
+
+  "npmRebuild": true,
+
+  "mac": {
+    "target": ["dmg"],
+    "category": "public.app-category.entertainment"
+  },
+
+  "win": {
+    "target": ["nsis"]
+  },
+
+  "linux": {
+    "target": ["deb", "rpm"]
+  },
+
+  "dmg": {
+    "backgroundColor": "#ccc"
+  }
+}
